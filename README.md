@@ -1,8 +1,3 @@
-Fast Diffusion Probabilistic Model Sampling through the lens of Backward Error Analysis. This is the official code for the paper "Fast Diffusion Probabilistic Model Sampling through the lens of Backward Error Analysis" by Baidu&Upenn
-
-Use ys_solver_pytorch in your own code: It is easy to combine ys_solver_pytorch with your own pre-trained diffusion models. We support both Pytorch code. You can just copy the file ys_solver_pytorch.py to your own code files and import it.
-
-An example for using ys_solver_pytorch:
 
 
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
@@ -25,37 +20,13 @@ An example for using ys_solver_pytorch:
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
+<!--
 [![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
+#[![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+[![MIT License][license-shield]][license-url]-->
 [![LinkedIn][linkedin-shield]][linkedin-url]
-
-
-
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
-  <h3 align="center">Best-README-Template</h3>
-
-  <p align="center">
-    An awesome README template to jumpstart your projects!
-    <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
-    ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a>
-  </p>
-</div>
 
 
 
@@ -88,55 +59,62 @@ An example for using ys_solver_pytorch:
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## Fast Diffusion Probabilistic Model Sampling through the lens of Backward Error Analysis
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
+This is the official code for the paper "Fast Diffusion Probabilistic Model Sampling through the lens of Backward Error Analysis" by Baidu&Upenn.
 
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should implement DRY principles to the rest of your life :smile:
-
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
-
-Use the `BLANK_README.md` to get started.
+Use the `README.md` to get started.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
-### Built With
-
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+It is easy to combine ys_solver_pytorch with your own pre-trained diffusion models. We support both Pytorch code. You can just copy the file `ys_solver_pytorch.py`  to your own code files and import it.
 
-### Prerequisites
+### Examples
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+These are a few examples for using ys_solver_pytorch:
+* Adaptive step schedulment image sampling
+  ```python
+  from dpm_solver_pytorch import NoiseScheduleVP, model_wrapper, DPM_Solver
+  ## You need to firstly define your model and the extra inputs of your model,
+  ## And initialize an `x_T` from the standard normal distribution.
+  ## `model` has the format: model(x_t, t_input, **model_kwargs).
+  ## If your model has no extra inputs, just let model_kwargs = {}.
+  # model = ....
+  # model_kwargs = {...}
+  # x_T = ...
+  ## 1. Define the noise schedule.
+  ## We support the 'linear' or 'cosine' VP schedule.
+  noise_schedule = NoiseScheduleVP(schedule='linear')
+  ## 2. Convert your discrete-time noise prediction model `model`
+  ## to the continuous-time noise prediction model.
+  model_fn = model_wrapper(
+      model,
+      noise_schedule,
+      is_cond_classifier=False,
+      total_N=1000,
+      model_kwargs=model_kwargs
+  )
+  ## 3. Define dpm-solver and sample by dpm-solver-fast (recommended).
+  ## You can adjust the `steps` to balance the computation
+  ## costs and the sample quality.
+  dpm_solver = DPM_Solver(model_fn, noise_schedule)
+  x_sample = dpm_solver.sample(
+      x_T,
+      steps=15,
+      eps=1e-4,
+      adaptive_step_size=False,
+      fast_version=True,
+  )
+```
 
 ### Installation
 
@@ -226,7 +204,7 @@ Project Link: [https://github.com/your_username/repo_name](https://github.com/yo
 
 
 
-<!-- ACKNOWLEDGMENTS -->
+<!-- ACKNOWLEDGMENTS 
 ## Acknowledgments
 
 Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
@@ -239,7 +217,7 @@ Use this space to list resources you find helpful and would like to give credit 
 * [GitHub Pages](https://pages.github.com)
 * [Font Awesome](https://fontawesome.com)
 * [React Icons](https://react-icons.github.io/react-icons/search)
-
+-->
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -257,7 +235,7 @@ Use this space to list resources you find helpful and would like to give credit 
 [license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
 [license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
+[linkedin-url]: https://www.linkedin.com/in/yansong-gao-a1aa56199/
 [product-screenshot]: images/screenshot.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
