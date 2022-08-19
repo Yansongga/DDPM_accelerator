@@ -87,9 +87,9 @@ These are a few examples for using ys_solver_pytorch:
   ## You need to firstly define your model and diffusion
   ## `model` has the format: model(x, t, **model_kwargs).
   ## If your model has no extra inputs, just let model_kwargs = {}.
+  
   # model, diffusion = ....
   # model_kwargs = {...}
-  
   my_solver = ys_solver( 
         diffusion = diffusion, 
         thres = float(args.thres),   ### You need to define your own threshold for fast sampling. You can adjust the `steps` to balance the computation costs and the sample quality.
