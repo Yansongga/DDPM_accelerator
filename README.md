@@ -217,7 +217,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Yansong Gao - [@My_homepage](https://scholar.google.com/citations?user=qxMVu4cAAAAJ&hl=en) - gaoyans@sas.upenn.edu
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+Project Link: [https://github.com/Yansongga/DDPM_accelerator](https://github.com/Yansongga/DDPM_accelerator)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
