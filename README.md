@@ -126,31 +126,30 @@ These are a few examples for using ys_solver_pytorch:
   ```
 * Customized step schedule sampling 
 
-```python
-  import torch
-  from ys_solver_pytorch import ys_solver
-  ## You need to firstly define your model and diffusion
-  ## `model` has the format: model(x, t, **model_kwargs).
-  ## If your model has no extra inputs, just let model_kwargs = {}.
-  # model, diffusion = ....
-  # model_kwargs = {...}
-  
-  my_solver = ys_solver( 
-        diffusion = diffusion, 
-        thres = None,   ### If you would like to use Customized step schedule sampling, there is no need to define thres. 
-        dpm_indices = torch.load( args.schedule_path  ), ## You need to provide your timestep schedule saving path. 
-        use_adpt = False)  ### If you would like to use Customized step schedule sampling, make sure use_adpt = False. 
-  
-  
-  ## 3. Sample by my_solver.sample_loop.
-  sample = my_solver.sample_loop(
-        model,
-        (args.batch_size, 3, args.image_size, args.image_size),    ## You need to set up your batchsize and image size. 
-        clip_denoised=args.clip_denoised,
-        model_kwargs=model_kwargs,
-        )
-  ## "sample" is the sample images you get.
-  ```
+  ```python
+    import torch
+    from ys_solver_pytorch import ys_solver
+    ## You need to firstly define your model and diffusion
+    ## `model` has the format: model(x, t, **model_kwargs).
+    ## If your model has no extra inputs, just let model_kwargs = {}.
+    # model, diffusion = ....
+    # model_kwargs = {...}
+
+    my_solver = ys_solver( 
+          diffusion = diffusion, 
+          thres = None,   ### If you would like to use Customized step schedule sampling, there is no need to define thres. 
+          dpm_indices = torch.load( args.schedule_path  ), ## You need to provide your timestep schedule saving path. 
+          use_adpt = False)  ### If you would like to use Customized step schedule sampling, make sure use_adpt = False. 
+
+
+    ## 3. Sample by my_solver.sample_loop.
+    sample = my_solver.sample_loop(
+          model,
+          (args.batch_size, 3, args.image_size, args.image_size),    ## You need to set up your batchsize and image size. 
+          clip_denoised=args.clip_denoised,
+          model_kwargs=model_kwargs,
+          )
+    ```
    
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
