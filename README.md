@@ -78,61 +78,80 @@ Use the `README.md` to get started.
 
 It is easy to combine ys_solver_pytorch with your own pre-trained diffusion models. We support both Pytorch code. You can just copy the file `ys_solver_pytorch.py`  to your own code files and import it.
 
-### Examples
+### Quick implementations
 
 These are a few examples for using ys_solver_pytorch:
-* Adaptive step schedulment image sampling
+* Learning timestep schedule & Adaptive stepsize sampling 
   ```python
-  from dpm_solver_pytorch import NoiseScheduleVP, model_wrapper, DPM_Solver
-  ## You need to firstly define your model and the extra inputs of your model,
-  ## And initialize an `x_T` from the standard normal distribution.
-  ## `model` has the format: model(x_t, t_input, **model_kwargs).
+  from ys_solver_pytorch import ys_solver
+  ## You need to firstly define your model and diffusion
+  ## `model` has the format: model(x, t, **model_kwargs).
   ## If your model has no extra inputs, just let model_kwargs = {}.
-  # model = ....
+  # model, diffusion = ....
   # model_kwargs = {...}
-  # x_T = ...
-  ## 1. Define the noise schedule.
-  ## We support the 'linear' or 'cosine' VP schedule.
-  noise_schedule = NoiseScheduleVP(schedule='linear')
-  ## 2. Convert your discrete-time noise prediction model `model`
-  ## to the continuous-time noise prediction model.
-  model_fn = model_wrapper(
-      model,
-      noise_schedule,
-      is_cond_classifier=False,
-      total_N=1000,
-      model_kwargs=model_kwargs
-  )
-  ## 3. Define dpm-solver and sample by dpm-solver-fast (recommended).
-  ## You can adjust the `steps` to balance the computation
-  ## costs and the sample quality.
-  dpm_solver = DPM_Solver(model_fn, noise_schedule)
-  x_sample = dpm_solver.sample(
-      x_T,
-      steps=15,
-      eps=1e-4,
-      adaptive_step_size=False,
-      fast_version=True,
-  )
-```
+  
+  my_solver = ys_solver( 
+        diffusion = diffusion, 
+        thres = float(args.thres),   ### You need to define your own threshold for fast sampling. You can adjust the `steps` to balance the computation costs and the sample quality.
+        dpm_indices = None, 
+        use_adpt = True)  ### If you would like to use adaptive step schedule sampling, make sure use_adpt = True. 
+  
+  
+  ## 3. Sample by my_solver.sample_loop.
+  sample, num_s, t_sche = my_solver.sample_loop(
+        model,
+        (args.batch_size, 3, args.image_size, args.image_size),    ## You need to set up your batchsize and image size. 
+        clip_denoised=args.clip_denoised,
+        model_kwargs=model_kwargs,
+        )
+        
+  ## "sample" is the sample images you get. 'num_s' is the average number of steps in this batch. 't_sche' is the timestep schedule in this batch
+  
+  
+  nfe = int( args.nfe) ### This is your expected number of the forward evaluation, e.g. nfe = 8, 10, 12, 15, 20...
+  t_sche = t_sche.T[:, :nfe +1])
+  t_sche = t_sche[ t_sche[:, -1] == -1 ]
+  t_sche = t_sche[ t_sche[:, nfe-1] >-1 ]
+  t_sche = t_sche.float().mean(0).round().long().tolist()
 
-### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+  custom_sche = []
+  for idx in range(len(t_sche)-1):
+      custom_sche.append( [t_sche[idx], t_sche[idx +1]] )
+  
+  import torch
+  torch.save( custom_sche, args.schedule_path )
+  print( custom_sche, 'custom_sche' )
+  print('saved ' + args.schedule_path ) 
+  ```
+* Customized step schedule sampling 
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+```python
+  import torch
+  from ys_solver_pytorch import ys_solver
+  ## You need to firstly define your model and diffusion
+  ## `model` has the format: model(x, t, **model_kwargs).
+  ## If your model has no extra inputs, just let model_kwargs = {}.
+  # model, diffusion = ....
+  # model_kwargs = {...}
+  
+  my_solver = ys_solver( 
+        diffusion = diffusion, 
+        thres = None,   ### If you would like to use Customized step schedule sampling, there is no need to define thres. 
+        dpm_indices = torch.load( args.schedule_path  ), ## You need to provide your timestep schedule saving path. 
+        use_adpt = False)  ### If you would like to use Customized step schedule sampling, make sure use_adpt = False. 
+  
+  
+  ## 3. Sample by my_solver.sample_loop.
+  sample = my_solver.sample_loop(
+        model,
+        (args.batch_size, 3, args.image_size, args.image_size),    ## You need to set up your batchsize and image size. 
+        clip_denoised=args.clip_denoised,
+        model_kwargs=model_kwargs,
+        )
+  ## "sample" is the sample images you get.
+  ```
+   
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -196,7 +215,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
+Yansong Gao - [@My_homepage](https://scholar.google.com/citations?user=qxMVu4cAAAAJ&hl=en) - gaoyans@sas.upenn.edu
 
 Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
 
