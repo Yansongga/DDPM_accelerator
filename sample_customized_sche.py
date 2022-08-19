@@ -119,7 +119,6 @@ def create_argparser():
         clip_denoised=True,
         num_samples=5000,
         batch_size=50,
-        use_ddim= True,
         model_path= './checkpoints/imagenet64_uncond_100M_1500K.pt',
         npz_path = None, 
         fig_path = None,
