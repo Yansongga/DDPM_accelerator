@@ -156,7 +156,11 @@ These are a few examples for using ys_solver_pytorch:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### Example codes for ImageNet 64x64 sampling
 
+This section gives an example code for fast sampling ImageNet 64x64 using `ys_solver_pytorch.py` and the baseline diffusion model 
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 ## Usage
