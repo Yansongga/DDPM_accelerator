@@ -158,7 +158,11 @@ These are a few examples for using ys_solver_pytorch:
 
 ### Example codes for ImageNet 64x64 sampling
 
-This section gives an example code for fast sampling ImageNet 64x64 using `ys_solver_pytorch.py` and the baseline diffusion model 
+This section gives an example code for fast sampling ImageNet 64x64 using `ys_solver_pytorch.py` and the baseline [improved diffusion model](https://github.com/openai/improved-diffusion). You can just copy the file `ys_solver_pytorch.py`, `imagenet64_sample_adapt_sche.py`, and `imagenet64_sample_customized_sche.py` to your own code files and download the model checkpoints. If you would like to do fast sampling within 10 steps efficiently, we do suggest you firstly run the following command,
+
+```
+python imagenet64_sample_adapt_sche.py --num_samples 2500 --thres 11.5 --timestep_respacing 100 --nfe 10 --schedule_path ./results/schedule/sche-nfe=10-step=100.pt --model_path ./checkpoints/imagenet64_uncond_100M_1500K.pt
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -167,7 +171,7 @@ This section gives an example code for fast sampling ImageNet 64x64 using `ys_so
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+_For more examples, please refer to the [Documentation](https://example.com). 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
