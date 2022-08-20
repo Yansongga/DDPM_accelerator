@@ -158,15 +158,24 @@ These are a few examples for using ys_solver_pytorch:
 
 ### Example codes for ImageNet 64x64 sampling
 
-This section gives an example code for fast sampling ImageNet 64x64 using `ys_solver_pytorch.py` and the baseline [improved diffusion model](https://github.com/openai/improved-diffusion). You can just copy the file `ys_solver_pytorch.py`, `imagenet64_sample_adapt_sche.py`, and `imagenet64_sample_customized_sche.py` to your own code files and download the model checkpoints. If you would like to do fast sampling within 10 steps efficiently, we do suggest you firstly run the following command,
+This section gives an example code for fast sampling ImageNet 64x64 using `ys_solver_pytorch.py` and the baseline [improved diffusion model](https://github.com/openai/improved-diffusion). You can just copy the file `ys_solver_pytorch.py`, `imagenet64_sample_adapt_sche.py`, and `imagenet64_sample_customized_sche.py` to your own code files and download the model checkpoints. If you would like to do fast sampling within 10 steps efficiently, we do suggest you firstly run the following command:
 
 ```
 python imagenet64_sample_adapt_sche.py --num_samples 2500 --thres 11.5 --timestep_respacing 100 --nfe 10 --schedule_path ./results/schedule/sche-nfe=10-step=100.pt --model_path ./checkpoints/imagenet64_uncond_100M_1500K.pt
 ```
 
+Running the above command will save a 10-steps schedule to the default path `./results/schedule/sche-nfe=10-step=100.pt`. Next you just need to run
+
+```
+python imagenet64_sample_customized_sche.py --num_samples 50000 --timestep_respacing 100 --schedule_path ./results/schedule/sche-nfe=10-step=100.pt --npz_path customized_sche-nfe=10-step=100- --fig_path ./results/figs/customized_sche-nfe=10-step=100.gif --model_path ./checkpoints/imagenet64_uncond_100M_1500K.pt
+
+```
+to generate a large batch of high quality samples within 10 forward evaluations. 
+
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- USAGE EXAMPLES -->
+<!-- USAGE EXAMPLES 
 ## Usage
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
@@ -174,7 +183,7 @@ Use this space to show useful examples of how a project can be used. Additional 
 _For more examples, please refer to the [Documentation](https://example.com). 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
+-->
 
 
 <!-- ROADMAP
@@ -194,7 +203,7 @@ See the [open issues](https://github.com/othneildrew/Best-README-Template/issues
  -->
 
 
-<!-- CONTRIBUTING -->
+<!-- CONTRIBUTING 
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -210,7 +219,7 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
+-->
 
 <!-- LICENSE 
 ## License
@@ -224,7 +233,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Yansong Gao - [@My_homepage](https://scholar.google.com/citations?user=qxMVu4cAAAAJ&hl=en) - gaoyans@sas.upenn.edu
+Yansong Gao - [@my_homepage](https://scholar.google.com/citations?user=qxMVu4cAAAAJ&hl=en) - gaoyans@sas.upenn.edu
 
 Project Link: [https://github.com/Yansongga/DDPM_accelerator](https://github.com/Yansongga/DDPM_accelerator)
 
