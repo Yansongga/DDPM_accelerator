@@ -209,6 +209,8 @@ class ys_solver:
                 denoised_fn=denoised_fn,
                 model_kwargs=model_kwargs,
             )
+            if self.diffusion.cond_fn is not None:
+                out = self.diffusion.condition_score(self.diffusion.cond_fn, out, x, t, model_kwargs=model_kwargs)
             # Usually our model outputs epsilon, but we re-derive it
             # in case we used x_start or x_prev prediction.
             eps = self.diffusion._predict_eps_from_xstart(x_inputs, t, out["pred_xstart"])
@@ -285,6 +287,8 @@ class ys_solver:
             denoised_fn=denoised_fn,
             model_kwargs=model_kwargs,
         )
+        if self.diffusion.cond_fn is not None:
+                out = self.diffusion.condition_score(self.diffusion.cond_fn, out, x, t, model_kwargs=model_kwargs)
         
         # Usually our model outputs epsilon, but we re-derive it
         # in case we used x_start or x_prev prediction.
