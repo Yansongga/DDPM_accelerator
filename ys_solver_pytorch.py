@@ -50,7 +50,7 @@ class ys_solver:
         self.alphas_cumprod_prev = np.append(1.0, self.alphas_cumprod[:-1])
         self.alphas_cumprod_next = np.append(self.alphas_cumprod[1:], 0.0)
         self.alphas_cumprod_all = np.append(1.0, self.alphas_cumprod)
-        self.alphas_cumprod_plus = np.append(1.0 - 1e-12, self.alphas_cumprod_all)
+        self.alphas_cumprod_plus = np.append(1.0 - 1e-6, self.alphas_cumprod_all)
         assert self.alphas_cumprod_prev.shape == (diffusion.num_timesteps,)
 
 
