@@ -93,7 +93,11 @@ def main():
         logger.log(f"created {idx * args.batch_size} samples")
 
     if args.npz_path != None:
-        sample = ((all_images + 1) * 127.5).clamp(0, 255).to(th.uint8)
+        sample = (all_images + 1)* 0.5
+        if args.clip_denoised == False:
+            sample = th.clamp(sample, 0.0, 1.0)
+        sample = (sample * 255).clamp(0, 255).to(th.uint8)
+        #sample = ((all_images + 1) * 127.5).clamp(0, 255).to(th.uint8)
         sample = sample.permute(0, 2, 3, 1)
         sample = sample.contiguous()
         arr = sample.cpu().numpy()
@@ -105,8 +109,10 @@ def main():
     if args.fig_path != None:
         print( th.max(all_images), th.min(all_images), 'range' )
         unloader = transforms.ToPILImage()
-        imgs = 0.5 * (all_images +1)
-        imgs = torchvision.utils.make_grid(imgs, nrow =4)
+        imgs = 0.5 * (all_images[: 100] +1)
+        if args.clip_denoised == False:
+            imgs = th.clamp(imgs, 0.0, 1.0)
+        imgs = torchvision.utils.make_grid(imgs, nrow =10)
         imgs = [unloader( imgs)]
         imageio.mimsave(args.fig_path, imgs)
         print('saved ' + args.fig_path ) 
